@@ -10,3 +10,4 @@ Micro-service template to use with my [DevOpsDemo](https://github.com/butzist/De
 * Health-check endpoint
 * Prometheus metrics
 * Unit tests with xunit-compatible output
+* API/integration tests with docker-compose
