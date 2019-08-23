@@ -3,6 +3,7 @@ FROM golang:1.12-alpine as build
 WORKDIR /go/src/app
 COPY . .
 
+RUN apk add --no-cache git
 RUN go get -u github.com/tebeka/go2xunit github.com/golang/dep
 RUN /go/bin/dep ensure
 RUN go build -ldflags "-s -w" -v .
