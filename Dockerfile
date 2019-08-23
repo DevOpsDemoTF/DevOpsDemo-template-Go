@@ -3,11 +3,13 @@ FROM golang:1.12-alpine as build
 WORKDIR /go/src/app
 COPY . .
 
+ENV CGO_ENABLED=0
+
 RUN apk add --no-cache git
-RUN go get -u github.com/tebeka/go2xunit github.com/golang/dep
-RUN /go/bin/dep ensure
-RUN go build -ldflags "-s -w" -v .
-RUN 2>&1 go test -v | tee - | /go/bin/go2xunit -output test-results.xml
+RUN go get -u github.com/tebeka/go2xunit github.com/golang/dep/cmd/dep
+RUN dep ensure
+RUN go test -v . | tee - | go2xunit -output test-results.xml
+RUN go build -ldflags "-s -w" -v -o app .
 
 FROM alpine:3.9
 
