@@ -1,20 +1,16 @@
 version: '3'
 services:
   app:
-    build:
-      context: ..
-      dockerfile: ../Dockerfile
+    build: ..
     environment:
-      - DEBUG_LEVEL: DEBUG
-    restart: false
+      DEBUG_LEVEL: DEBUG
 
   # run with: docker-compose run tests
   tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     depends_on:
       - app
-    restart: false
+    volumes:
+      - ./results:/results
 
   # add any other containers such as DB, Redis, Mocks, ...

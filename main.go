@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -15,8 +15,10 @@ func main() {
 	log.Info("Service starting", cfg)
 
 	// expose metrics
-	http.Handle("/metrics", promhttp.Handler())
-	go log.Fatal(http.ListenAndServe(":9102", nil))
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Fatal(http.ListenAndServe(":9102", nil))
+	}()
 
 	// expose application and health endpoints
 	router := mux.NewRouter().StrictSlash(true)

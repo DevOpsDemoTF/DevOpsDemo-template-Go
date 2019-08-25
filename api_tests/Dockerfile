@@ -6,4 +6,4 @@ RUN mkdir /tests && \
 COPY . /tests
 
 WORKDIR /tests
-CMD ["nosetests", "--with-xunit", "--xunit-file", "test-results.xml"]
+CMD ["nosetests", "--with-xunit", "--xunit-file", "/results/api-test-results.xml"]
