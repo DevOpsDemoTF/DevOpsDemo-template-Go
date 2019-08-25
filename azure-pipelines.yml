@@ -11,6 +11,7 @@ resources:
 
 variables:
   name: 'devopsdemo-template-go'
+  tagname: 'latest'
 
 stages:
 - stage: Build
@@ -21,6 +22,22 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+      - task: Docker@2
+        displayName: Login to Docker registry
+        inputs:
+          command: login
+          containerRegistry: registry # a service connection that you must set up first
+      - script: echo "##vso[task.setvariable variable=tagname]$(git describe --tags)"
+        displayName: Get version tag
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+      - task: Docker@2
+        displayName: Build Docker image
+        inputs:
+          command: build
+          repository: $(name)
+          arguments: -t app:latest
+          tags: |
+            $(tagname)
       - bash: |
           cd api_tests
           docker-compose run tests
@@ -39,20 +56,9 @@ stages:
           testRunTitle: API tests
           failTaskOnFailedTests: true
       - task: Docker@2
-        displayName: Login to Docker registry
-        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+        displayName: Push to Docker registry
         inputs:
-          command: login
-          containerRegistry: registry # a service connection that you must set up first
-      - script: echo "##vso[task.setvariable variable=tagname]$(git describe --tags)"
-        displayName: Get version tag
-        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-      - task: Docker@2
-        displayName: Build and Push
-        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-        inputs:
-          command: buildAndPush
+          command: push
           repository: $(name)
           tags: |
             $(tagname)
-            latest

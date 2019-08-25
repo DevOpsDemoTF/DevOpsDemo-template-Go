@@ -15,6 +15,3 @@ Micro-service template to use with my [DevOpsDemo](https://github.com/butzist/De
 
 ### Links ###
 * https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/docker?view=azure-devops
-
-### TODO ###
-* Application container is built twice (once for test and once for buildAndPush) on Azure Pipelines - avoid this redundancy
