@@ -1,5 +1,5 @@
 # Template for micro-service in Go #
-[![Build Status](https://dev.azure.com/butzist/DevOpsDemo/_apis/build/status/butzist.DevOpsDemo-template-Go?branchName=master)](https://dev.azure.com/butzist/DevOpsDemo/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/butzist/DevOpsDemo/_apis/build/status/DevOpsDemoTF.DevOpsDemo-template-Go?branchName=master)](https://dev.azure.com/butzist/DevOpsDemo/_build/latest?definitionId=2&branchName=master)
 
 ### Description ###
 Micro-service template to use with my [DevOpsDemo](https://github.com/butzist/DevOpsDemo)
