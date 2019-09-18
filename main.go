@@ -1,28 +1,19 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/butzist/DevOpsDemo-template-Go/config"
+	"github.com/butzist/DevOpsDemo-template-Go/metrics"
 	"net/http"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	cfg := parseConfig()
-	initMetrics()
+	cfg := config.ParseConfig()
+	metrics.InitMetrics()
 
-	log.Info("Service starting", cfg)
+	log.Info("Service has been started", cfg)
 
-	// expose metrics
-	go func() {
-		http.Handle("/metrics", promhttp.Handler())
-		log.Fatal(http.ListenAndServe(":9102", nil))
-	}()
-
-	// expose application and health endpoints
-	router := mux.NewRouter().StrictSlash(true)
-	router.Methods("GET").Path("/health").HandlerFunc(Health)
-
+	router := createRouter(cfg)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
