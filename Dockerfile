@@ -1,14 +1,16 @@
 FROM golang:1.13-alpine as build
 
-WORKDIR /go/src/app
-COPY . .
+WORKDIR /app
 
 ENV CGO_ENABLED=0
-
 RUN apk add --no-cache git
-RUN go get -u github.com/tebeka/go2xunit github.com/golang/dep/cmd/dep
-RUN dep ensure
-RUN go test -v ./... | tee - | go2xunit -output test-results.xml
+RUN go get -u github.com/jstemmer/go-junit-report
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN go test -v ./... 2>&1 | tee - | go-junit-report > test-results.xml
 RUN go build -ldflags "-s -w" -v -o app .
 
 FROM alpine:3.10
@@ -21,7 +23,7 @@ EXPOSE 9102
 
 ENV DEBUG_LEVEL "DEBUG"
 
-COPY --from=build /go/src/app/app /go/src/app/test-results.xml /app/
+COPY --from=build /app/app /app/test-results.xml /app/
 
 USER app
 WORKDIR /app
